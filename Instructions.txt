@@ -1,0 +1,25 @@
+First, ensure that all of the necessary dependencies are downloaded. From the Linux terminal, type the following lines:
+	Python - sudo apt install python2.7
+	gdb -  sudo apt-get install gdb
+	ElfFile import - pip install capstone pyelftools
+	ElfTools -  pip install pyelftools
+	Capstone - pip install capstone
+Once everything is downloaded, place gadget_finder.py, payload_tester.py, and the binaries you would like to exploit in the same EMPTY directory. 
+	Please note that this directory should be empty to avoid files being overwritten or deleted during execution
+Navigate to that directory in your Linux terminal  by using the cd command. 
+	Ex. if the directory you chose is /usr/exploit/secret, type in the command line cd /usr/exploit/secret
+TO RUN gadget_finder.py: (basic usage: python gadget_finder <binary> <page aligned address> <binary base address>...) 
+	In the terminal, start by typing python gadget_finder
+Follow this by the name of the binary you want to exploit, the page aligned address, and the binary base address. For example, if the binary is named to_exploit.bin, the entire line should read ./gadget_finder to_exploit.bin 0xfffde000 0x0804e000
+	If you want to exploit multiple binaries, simply put the name of each binary after  ./gadget_finder, followed by a space (./gadget_finder to_exploit.bin  0xfffde000 0x0804e000 vuln_prog.bin 0xfff7e000 0x0808f000...)
+	Hit the enter key to run the program
+		Troubleshooting: if this throws an error from the terminal, try using python ./gadget_finder instead. Still doesn't work? Try python2 ./gadget_finder. If it still isn't working, make sure you have all of the dependencies from step (1) downloaded
+Understanding the output of gadget_finder.py:
+	For each binary you input to gadget_finder.py, you will see an output in the terminal. If the output is an error:
+		FileNotFoundError - the binary could not be found
+		TypeError - the binary could not be read
+		Error (code1) - there were not enough gadgets in the binary to work with.
+		Error (code2) - the program found the basic instructions to work with, but a command appeared within that gadget that rendered it invalid. 
+	Otherwise, gadget_finder.py will add a payload file to your current directory for each binary.
+TO RUN payload_tester.py: (basic usage: ./payload_tester <binary> <payload> <shellcode>) 
+	This can only run with one binary at a time. As input, give it the name of the binary, the name of the payload (created by gadget_finder), and a file containing your shellcode and the location of that shellcode (formatted <location of shellcode><shellcode>). This will execute your exploit.
